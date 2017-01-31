@@ -1,17 +1,17 @@
 module Cool where
 
 -- Code from the first half of the paper
--- I am not a number - I am a free variable
+-- Functional Pearl: I am not a number - I am a free variable
 --   by Connor McBride and James McKinna
 -- https://pdfs.semanticscholar.org/1df1/a0b5e9d14855e24deb7cd602bdef9445a435.pdf
 
 infixl 6 :$
 
 type Name = String
-data Expr = F Name         -- free variables
-          | B Int          -- bound variables
-          | Expr :$ Expr   -- application
-          | Expr :-> Scope -- forall _ . _
+data Expr = F Name         -- free variables, "x"
+          | B Int          -- bound variables, de Bruijn index
+          | Expr :$ Expr   -- application, (_ _)
+          | Expr :-> Scope -- forall ?∈_ . _
   deriving (Show,Eq)
   -- Expr are understood to be "closed" (no bound variables pointing out of scope)
   
