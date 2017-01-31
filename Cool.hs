@@ -13,8 +13,8 @@ data Expr = F Name         -- free variables, "x"
           | Expr :$ Expr   -- application, (_ _)
           | Expr :-> Scope -- forall ?∈_ . _
   deriving (Show,Read,Eq)
-  -- Expr are understood to be "closed" (no bound variables pointing out of scope)
-  
+  -- Expr are understood to be "closed" (no dangling bound variables)
+
 newtype Scope = Sc Expr deriving (Show,Read,Eq)
   -- Sc'd Exprs are understood to have one dangling bound variable B 0
 
@@ -71,6 +71,9 @@ infixr 4 --->
 name <--- (dom :-> scope) = Just (name :∈ dom, instantiate (F name) scope)
 name <--- _               = Nothing
 
+ex0 :: Expr -- example with no binders
+ex0 = F "sqrt" :$ (F "+" :$ (F "^2" :$ F "x") :$ (F "^2" :$ F "y"))
+
 ex1 :: Expr -- forall x in the Bar, x is drinking
 ex1 = F "Bar" :-> Sc (F "IsDrinking" :$ B 0)
 
@@ -85,8 +88,10 @@ pretty e = case e of
   dom :-> Sc body -> "(∀_∈" ++ pretty dom ++ " . " ++ pretty body ++ ")"
 
 newtype Pretty = Pretty { ugly :: Expr }
+newtype PrettySc = PrettySc { uglySc :: Scope }
 
 instance Show Pretty where
   show = pretty . ugly
 
-
+instance Show PrettySc where
+  show (PrettySc (Sc ex)) = pretty ex

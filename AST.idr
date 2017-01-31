@@ -1,4 +1,3 @@
-
 record Arity S where
   constructor MkArity
   arSort : S
@@ -74,3 +73,4 @@ ast = Op Sequ
   , Op Print [Op (Lit 9) []]
   ]
 -}
+
