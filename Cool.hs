@@ -12,10 +12,10 @@ data Expr = F Name         -- free variables, "x"
           | B Int          -- bound variables, de Bruijn index
           | Expr :$ Expr   -- application, (_ _)
           | Expr :-> Scope -- forall ?∈_ . _
-  deriving (Show,Eq)
+  deriving (Show,Read,Eq)
   -- Expr are understood to be "closed" (no bound variables pointing out of scope)
   
-newtype Scope = Sc Expr deriving (Show,Eq)
+newtype Scope = Sc Expr deriving (Show,Read,Eq)
   -- Sc'd Exprs are understood to have one dangling bound variable B 0
 
 -- Convert an Expr into a Scope by replacing a free variable `name' with B i
